@@ -216,3 +216,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Exclude local data and heavy files
+data/
+*.csv
+*.parquet

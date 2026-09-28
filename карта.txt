@@ -1,0 +1,7 @@
+ecommerce-analytics-pipeline/
+├── .gitignore           # Файл с правилами ігнорування
+├── README.md            # головна сторінка
+├── data/                # Файли датасету Olist (.csv)
+├── notebooks/           # для експериментів JupyterLab
+├── sql/                 # для SQL-скриптів Днів 1–7
+└── scripts/             # для Python-скриптів Polars Днів 8–14
