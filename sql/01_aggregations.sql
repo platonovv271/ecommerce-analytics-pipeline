@@ -2,6 +2,9 @@
 -- PHASE 1: FOUNDATIONAL AGGREGATIONS & INTERVAL ANALYSIS
 -- File: sql/01_aggregations.sql
 -- Engine: DuckDB
+-- Data Source: Brazilian E-Commerce Dataset by Olist (Kaggle)
+-- Link: https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce
+-- Note: Place extracted CSV files inside the 'data/' directory.
 -- =================================================================
 
 -- -----------------------------------------------------------------
@@ -17,14 +20,14 @@
 --   3. Aggregate total volume (COUNT) and calculate average order value (AVG).
 --   4. Sort sequentially to observe trends from single-pay to long-term plans.
 --
--- Input Source: olist_order_payments_dataset.csv
+-- Input Source: data/olist_order_payments_dataset.csv
 -- -----------------------------------------------------------------
 
 SELECT 
     payment_installments,
     COUNT(*) AS total_transactions,
     ROUND(AVG(payment_value), 2) AS average_value
-FROM 'D:/ANALYTICS_/ecommerce-analytics-pipeline/data/olist_order_payments_dataset.csv'
+FROM 'data/olist_order_payments_dataset.csv'
 WHERE payment_installments > 0
 GROUP BY payment_installments
 ORDER BY payment_installments ASC;
@@ -42,13 +45,13 @@ ORDER BY payment_installments ASC;
 --   2. Apply post-aggregation filtering via HAVING total_state > 3000 to isolate key hubs.
 --   3. Sort in descending order to highlight primary market leaders.
 --
--- Input Source: olist_customers_dataset.csv
+-- Input Source: data/olist_customers_dataset.csv
 -- -----------------------------------------------------------------
 
 SELECT 
     customer_state,
     COUNT(*) AS total_state
-FROM 'D:/ANALYTICS_/ecommerce-analytics-pipeline/data/olist_customers_dataset.csv'
+FROM 'data/olist_customers_dataset.csv'
 GROUP BY customer_state
 HAVING total_state > 3000
 ORDER BY total_state DESC;
@@ -67,7 +70,7 @@ ORDER BY total_state DESC;
 --   3. Compute total large transactions, rounded average spend, and peak single check.
 --   4. Rank payment methods by highest average large transaction size.
 --
--- Input Source: olist_order_payments_dataset.csv
+-- Input Source: data/olist_order_payments_dataset.csv
 -- -----------------------------------------------------------------
 
 SELECT 
@@ -75,7 +78,7 @@ SELECT
     COUNT(*) AS large_transactions,
     ROUND(AVG(payment_value), 2) AS avg_large_check,
     MAX(payment_value) AS max_check
-FROM 'D:/ANALYTICS_/ecommerce-analytics-pipeline/data/olist_order_payments_dataset.csv'
+FROM 'data/olist_order_payments_dataset.csv'
 WHERE payment_value > 100
 GROUP BY payment_type
 ORDER BY avg_large_check DESC;
@@ -95,7 +98,7 @@ ORDER BY avg_large_check DESC;
 --   4. Aggregate overall order volume along with MIN, rounded AVG, and MAX delivery days.
 --   5. Group results by order status and sort by volume to emphasize completed orders.
 --
--- Input Source: olist_orders_dataset.csv
+-- Input Source: data/olist_orders_dataset.csv
 -- -----------------------------------------------------------------
 
 SELECT 
@@ -104,7 +107,7 @@ SELECT
     MIN(date_diff('day', order_purchase_timestamp::TIMESTAMP, order_delivered_customer_date::TIMESTAMP)) AS min_delivery,
     ROUND(AVG(date_diff('day', order_purchase_timestamp::TIMESTAMP, order_delivered_customer_date::TIMESTAMP)), 1) AS avg_delivery,
     MAX(date_diff('day', order_purchase_timestamp::TIMESTAMP, order_delivered_customer_date::TIMESTAMP)) AS max_delivery
-FROM 'D:/ANALYTICS_/ecommerce-analytics-pipeline/data/olist_orders_dataset.csv'
+FROM 'data/olist_orders_dataset.csv'
 WHERE order_delivered_customer_date IS NOT NULL
 GROUP BY order_status
 ORDER BY total_orders DESC;
